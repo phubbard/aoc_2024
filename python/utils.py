@@ -5,10 +5,24 @@ from itertools import permutations, combinations_with_replacement
 import inspect
 import os
 
-import logging
+from loguru import logger
+log = logger
+from pandas import read_csv
 
-logging.basicConfig(level=logging.INFO, format='%(pathname)s(%(lineno)s): %(levelname)s %(message)s')
-log = logging.getLogger()
+
+def make_data_filenames(problem_number):
+    # Return a tuple of (sample_filename, full_filename)
+    zero_padded = f"{problem_number:02}"
+    return f'./data/{zero_padded}s.txt', f'./data/{zero_padded}.txt'
+
+
+def read_data_pd(problem_number):
+    # Return a tuple of (sample_data, full_data)    
+    sample_fn, fn = make_data_filenames(problem_number)
+    data = read_csv(fn, header=None, sep=r'\s+')
+    sample_data = read_csv(sample_fn, header=None, sep='\s+')
+    return sample_data, data
+
 
 def blog(message, multiline=None, frameNudge=0):
     """Brad's logging utility.
