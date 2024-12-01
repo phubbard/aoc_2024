@@ -12,14 +12,12 @@ zA24M_TOOLS_DIR     = Tools
 #
 
 zA24M_MBC_MAKEFILE = $(zA24M_TOOLS_DIR)/mbc.MakefileBashConsole.mk
-zA24M_BGC_MAKEFILE = $(zA24M_TOOLS_DIR)/bgc.BuildGithubContainers.mk
 
 
 # What console tool will put in prefix of each line
 MBC_ARG__CONTEXT_STRING = $(zA24M_THIS_MAKEFILE)
 
 include $(zA24M_MBC_MAKEFILE)
-include $(zA24M_BGC_MAKEFILE)
 
 zA24M_START = $(MBC_SHOW_WHITE) "Rule $@: starting..."
 zA24M_STEP  = $(MBC_SHOW_WHITE) "Rule $@:"
@@ -36,19 +34,10 @@ default:
 	$(MBC_SHOW_RED) "NO TARGET SPECIFIED.  Check" $(zA24M_TABTARGET_DIR) "directory for options." && $(MBC_FAIL)
 
 # OUCH scrub this out eventually
-# $(info A24M_PARAMETER_0: $(A24M_PARAMETER_0))
-# $(info A24M_PARAMETER_1: $(A24M_PARAMETER_1))
-# $(info A24M_PARAMETER_2: $(A24M_PARAMETER_2))
-# $(info A24M_PARAMETER_3: $(A24M_PARAMETER_3))
-
-# Configure and include the Recipe Bottle Makefile
-zA24M_RBM_MAKEFILE := $(zA24M_TOOLS_DIR)/rbm.RecipeBottleMakefile.mk
-
-RBM_MONIKER := $(A24M_PARAMETER_2)
-
-include $(zA24M_RBM_MAKEFILE)
-
-zA24M_RBM_SUBMAKE = $(MAKE) -f $(zA24M_RBM_MAKEFILE) RBM_ARG_SUBMAKE_MBC=$(zA24M_MBC_MAKEFILE)
+$(info A24M_PARAMETER_0: $(A24M_PARAMETER_0))
+$(info A24M_PARAMETER_1: $(A24M_PARAMETER_1))
+$(info A24M_PARAMETER_2: $(A24M_PARAMETER_2))
+$(info A24M_PARAMETER_3: $(A24M_PARAMETER_3))
 
 
 
@@ -151,14 +140,8 @@ b01.mk:
 	@echo 'List initial rust app...'
 	podman run -v ./:/app:Z -w /app/rust $(A24M_RUST_IMAGE) ls
 	@echo 'Run initial rust app...'
-	podman run -v ./:/app:Z -w /app/rust $(A24M_RUST_IMAGE) b01.rs
+	podman run -v ./:/app:Z -w /app/rust $(A24M_RUST_IMAGE) ./main
 	@echo 'done.'
-
-# Create a container with the source mounted
-
-# Run the compiled program
-./main
-
 
 
 
