@@ -62,6 +62,12 @@ fn main() -> io::Result<()> {
     println!("First array:  {:#?}", numbers1);
     println!("Second array: {:#?}", numbers2);
 
+    numbers1.sort_by_key( |loc| loc.value );
+    numbers2.sort_by_key( |loc| loc.value );
+
+    println!("SORTED First array:  {:#?}", numbers1);
+    println!("SORTED Second array: {:#?}", numbers2);
+
     Ok(())
 }
 
