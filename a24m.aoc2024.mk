@@ -135,4 +135,31 @@ vsr.ReplaceSlickEditWorkspace.sh:
 A24M_PARAM_DIR = 
 
 
+#######################################
+#  AOC 2024 stuff
+#
+
+
+A24M_RUST_IMAGE = ghcr.io/bhyslop/recipemuster:bottle_rust.20241201__213634
+
+
+b01.mk:
+	@echo 'Pull rust image...'
+	podman pull $(A24M_RUST_IMAGE)
+	@echo 'Building initial rust app...'
+	podman run -v ./:/app:Z -w /app/rust $(A24M_RUST_IMAGE) rustc b01.rs
+	@echo 'List initial rust app...'
+	podman run -v ./:/app:Z -w /app/rust $(A24M_RUST_IMAGE) ls
+	@echo 'Run initial rust app...'
+	podman run -v ./:/app:Z -w /app/rust $(A24M_RUST_IMAGE) b01.rs
+	@echo 'done.'
+
+# Create a container with the source mounted
+
+# Run the compiled program
+./main
+
+
+
+
 # EOF
