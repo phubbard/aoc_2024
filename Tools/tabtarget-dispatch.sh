@@ -21,6 +21,7 @@
 #
 
 set -euo pipefail
+set -x
 
 # First parameter is the number of jobs we'll let MAKE use. 1 is default non-parallel
 JOBS=$1
@@ -46,9 +47,9 @@ IFS='.' read -ra EXE_PARTS <<< "$TABTARGET_BASENAME"
 make -f a24-console.mk                                 \
     "$OUTPUT_SYNC" -j "$JOBS"                          \
     "$TABTARGET_BASENAME"                              \
-    ${EXE_PARTS[0]:+RBC_PARAMETER_0="${EXE_PARTS[0]}"} \
-    ${EXE_PARTS[1]:+RBC_PARAMETER_1="${EXE_PARTS[1]}"} \
-    ${EXE_PARTS[2]:+RBC_PARAMETER_2="${EXE_PARTS[2]}"} \
-    ${EXE_PARTS[3]:+RBC_PARAMETER_3="${EXE_PARTS[3]}"} \
+    ${EXE_PARTS[0]:+A24_PARAMETER_0="${EXE_PARTS[0]}"} \
+    ${EXE_PARTS[1]:+A24_PARAMETER_1="${EXE_PARTS[1]}"} \
+    ${EXE_PARTS[2]:+A24_PARAMETER_2="${EXE_PARTS[2]}"} \
+    ${EXE_PARTS[3]:+A24_PARAMETER_3="${EXE_PARTS[3]}"} \
     $ARGS
 
