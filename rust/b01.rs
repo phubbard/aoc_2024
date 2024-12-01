@@ -68,6 +68,23 @@ fn main() -> io::Result<()> {
     println!("SORTED First array:  {:#?}", numbers1);
     println!("SORTED Second array: {:#?}", numbers2);
 
+    let mut accumulator: i32 = 0;
+
+    for i in 0..numbers1.len() {
+
+        let a = numbers1[i].value;
+        let b = numbers2[i].value;
+
+        println!("At: {} considering {} and {}", i, a, b);
+
+        let diff = if a > b 
+                    { a - b } else
+                        { b - a };
+
+        accumulator = accumulator + diff;
+        println!("At: {} the accumulator is now {}", i, accumulator);
+    }
+
     Ok(())
 }
 
