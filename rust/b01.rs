@@ -1,31 +1,46 @@
 use std::fs::File;
-use std::io::{BufRead, BufReader};
+use std::io::{self, BufRead, BufReader};
 
-fn main() -> std::io::Result<()> {
+
+fn parse_number(num_str: &str, line_number: usize) -> Result<i32, io::Error> {
+    let num_int = num_str.parse::<i32>().map_err(|e| {
+        io::Error::new(
+            io::ErrorKind::InvalidData,
+            format!("Line {}: First number invalid: {}", line_number + 1, e)
+        )
+    })?;
+
+    Ok(num_int)
+}
+
+fn main() -> io::Result<()> {
     let file = File::open("../data/01-s.txt")?;
     let reader = BufReader::new(file);
 
     let mut numbers1: Vec<i32> = Vec::new();
     let mut numbers2: Vec<i32> = Vec::new();
 
-    // Read the file line by line
-    for line in reader.lines() {
+    for (line_number, line) in reader.lines().enumerate() {
         let line = line?;
-        // Split the line by whitespace and collect into a vector
         let nums: Vec<&str> = line.split_whitespace().collect();
         
-        if nums.len() >= 2 {
-            // Parse the numbers and add them to their respective arrays
-            if let Ok(num1) = nums[0].parse::<i32>() {
-                if let Ok(num2) = nums[1].parse::<i32>() {
-                    numbers1.push(num1);
-                    numbers2.push(num2);
-                }
-            }
+        // Check for exactly 2 numbers
+        if nums.len() != 2 {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                format!("Line {} does not contain exactly 2 numbers", line_number + 1)
+            ));
         }
+
+        // Parse both numbers, returning error if either fails
+        let num1 = parse_number(nums[0], line_number)?;
+        
+        let num2 = parse_number(nums[1], line_number)?;
+
+        numbers1.push(num1);
+        numbers2.push(num2);
     }
 
-    // Print out the arrays
     println!("First array: {:?}", numbers1);
     println!("Second array: {:?}", numbers2);
 
