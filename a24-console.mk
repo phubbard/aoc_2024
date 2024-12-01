@@ -132,15 +132,16 @@ A24M_PARAM_DIR =
 A24M_RUST_IMAGE = ghcr.io/bhyslop/recipemuster:bottle_rust.20241201__213634
 
 
-b01.mk:
+a24br%:
+	@echo 'Display parameters... A24_PARAMETER_2=' $(A24_PARAMETER_2)
 	@echo 'Pull rust image...'
 	podman pull $(A24M_RUST_IMAGE)
 	@echo 'Building initial rust app...'
-	podman run -v ./:/app:Z -w /app/rust $(A24M_RUST_IMAGE) rustc b01.rs
+	podman run -v ./:/app:Z -w /app/rust $(A24M_RUST_IMAGE) rustc $(A24_PARAMETER_2).rs
 	@echo 'List initial rust app...'
 	podman run -v ./:/app:Z -w /app/rust $(A24M_RUST_IMAGE) ls
 	@echo 'Run initial rust app...'
-	podman run -v ./:/app:Z -w /app/rust $(A24M_RUST_IMAGE) ./main
+	podman run -v ./:/app:Z -w /app/rust $(A24M_RUST_IMAGE) ./$(A24_PARAMETER_2)
 	@echo 'done.'
 
 
