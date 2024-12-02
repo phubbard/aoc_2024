@@ -20,7 +20,8 @@ impl fmt::Display for LocationID {
 #[derive(Debug)]
 struct ProblemSet {
     file_name: &'static str,
-    expected_answer: i32
+    expected_answer_p1: i32,
+    expected_answer_p2: i32,
 }
 
 
@@ -40,6 +41,7 @@ fn parse_number(num_str: &str, position_number: usize) -> Result<LocationID, io:
 
 fn try_set(problem_set: &ProblemSet) -> Result<(), std::io::Error> {
 
+    println!("trying open with {}", problem_set.file_name);
     let file = std::fs::File::open(problem_set.file_name)?;
     println!("Good open with {}", problem_set.file_name);
 
@@ -72,13 +74,34 @@ fn try_set(problem_set: &ProblemSet) -> Result<(), std::io::Error> {
     // println!("First array:  {:#?}", numbers1);
     // println!("Second array: {:#?}", numbers2);
 
+    let mut accum_p2: i32 = 0;
+    for i in 0..numbers1.len() {
+
+        let a = numbers1[i].value;
+        let mut count = 0;
+        for j in 0..numbers2.len() {
+            if a == numbers2[j].value {
+                count = count + 1
+            }
+        }
+        accum_p2 = accum_p2 + a * count;
+        // println!("Given at {}: {} and {} leads to new accum {}", i, a, count, accum_p2);
+    }
+
+    if problem_set.expected_answer_p2 != accum_p2 {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidData,
+            format!("Part Deux: Expected {} but saw {}", problem_set.expected_answer_p2, accum_p2)
+        ));
+    }
+
     numbers1.sort_by_key( |loc| loc.value );
     numbers2.sort_by_key( |loc| loc.value );
 
     // println!("SORTED First array:  {:#?}", numbers1);
     // println!("SORTED Second array: {:#?}", numbers2);
 
-    let mut accumulator: i32 = 0;
+    let mut accum_p1: i32 = 0;
 
     for i in 0..numbers1.len() {
 
@@ -91,16 +114,16 @@ fn try_set(problem_set: &ProblemSet) -> Result<(), std::io::Error> {
                     { a - b } else
                         { b - a };
 
-        accumulator = accumulator + diff;
+        accum_p1 = accum_p1 + diff;
         // println!("At: {} the accumulator is now {}", i, accumulator);
     }
 
-    println!("At end: the accumulator is now {}", accumulator);
+    // println!("At end: the accumulator is now {}", accum_p1);
 
-    if problem_set.expected_answer != accumulator {
+    if problem_set.expected_answer_p1 != accum_p1 {
         return Err(io::Error::new(
             io::ErrorKind::InvalidData,
-            format!("Expected {} but saw {}", problem_set.expected_answer, accumulator)
+            format!("Expected {} but saw {}", problem_set.expected_answer_p1, accum_p1)
         ));
     }
 
@@ -111,8 +134,8 @@ fn try_set(problem_set: &ProblemSet) -> Result<(), std::io::Error> {
 fn main() -> io::Result<()> {
 
     let problem_sets: [ProblemSet; 2] = [
-        ProblemSet { file_name: "../data/01-s.txt", expected_answer: 11 },
-        ProblemSet { file_name: "../data/01.txt",   expected_answer: 3569916 },
+        ProblemSet { file_name: "../data/01s.txt", expected_answer_p1: 11,      expected_answer_p2: 31 },
+        ProblemSet { file_name: "../data/01.txt",  expected_answer_p1: 3569916, expected_answer_p2: 26407426 },
     ];
 
     for problem_set in &problem_sets {
