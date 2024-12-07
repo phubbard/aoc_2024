@@ -3,23 +3,37 @@ use std::io::{self, BufRead, BufReader};
 use std::fmt;
 
 #[derive(Debug)]
+enum State {
+    Safe,
+    Unsafe,
+}
+
+#[derive(Debug)]
 struct Report {
     number: usize,
     levels: Vec<i32>,
+    state: State,
 }
 
 impl Report {
     pub fn new(number: usize, levels: Vec<i32>) -> Self {
+        let state: State = State::Safe;
+
         Report {
             number: number,
             levels: levels,
+            state: state,
         }
     }
 }
 
 impl fmt::Display for Report {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "REPORT#{}: {:#?}", self.number, self.levels)
+        write!(
+            f,
+            "REPORT#{}: {:#?} is {:?}",
+            self.number, self.levels, self.state
+        )
     }
 }
 
