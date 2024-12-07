@@ -5,6 +5,7 @@
 
 from loguru import logger
 import pandas as pd
+import peek
 
 from utils import make_data_filenames
 log = logger
@@ -25,9 +26,25 @@ def part_one(data: pd.DataFrame) -> None:
     total = sum([abs(element[0] - element[1]) for element in zip(value1, value2)])
     print(f'Part one sum: {total}')
 
+
+def part_two(data: pd.DataFrame) -> None:
+    # Extract the value1 and value2 columns into separate python lists
+    value1 = data['value1'].tolist()
+    value2 = data['value2'].tolist()
+
+    total_sum = 0
+    for entry in value1:
+        total_sum += entry *value2.count(entry)
+
+    peek(total_sum)
+
+
 if __name__ == '__main__':
     sample_data, full_data = read_data_pd(1)
     part_one(sample_data)
     part_one(full_data)
+    part_two(sample_data)
+    part_two(full_data)
 #    log.info(f'Sample data: {sample_data}')
 #    log.info(f'Full data: {full_data}')
+
