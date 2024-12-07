@@ -7,14 +7,26 @@ def is_safe(report):
     decreasing = all(1 <= report[i] - report[i + 1] <= 3 for i in range(len(report) - 1))
     return increasing or decreasing
 
+
+def generate_all_reports(report):
+    for i in range(len(report)):
+        yield report[:i] + report[i+1:]
+
+
 def is_safe_with_damper(report):
     # Check if levels are either all increasing or all decreasing. In part 2, we
-    # can now have one bad step before it's unsafe.
-    increasing = sum(1 <= report[i + 1] - report[i] <= 3 for i in range(len(report) - 1))
-    decreasing = sum(1 <= report[i] - report[i + 1] <= 3 for i in range(len(report) - 1))
+    # can now have one bad step before it's unsafe. For each report, we need to try the list as-is,
+    # and try removing each level one at a time.
 
-    peek(increasing, decreasing)
-    return increasing or decreasing
+    if is_safe(report):
+        return True
+
+    for report in generate_all_reports(report):
+        if is_safe(report):
+            return True
+        
+    return False
+
 
 
 def count_safe_reports(data, part_one=True):
@@ -28,7 +40,7 @@ def count_safe_reports(data, part_one=True):
         else:
             if is_safe_with_damper(report):
                 safe_count += 1
-                
+
     return safe_count
 
 # Count the safe reports
