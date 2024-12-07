@@ -8,9 +8,18 @@ struct Report {
     levels: Vec<i32>,
 }
 
+impl Report {
+    pub fn new(number: usize, levels: Vec<i32>) -> Self {
+        Report {
+            number: number,
+            levels: levels,
+        }
+    }
+}
+
 impl fmt::Display for Report {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "REPORT#{}: {:#?}", self.number, self.levels,)
+        write!(f, "REPORT#{}: {:#?}", self.number, self.levels)
     }
 }
 
@@ -42,10 +51,9 @@ fn try_set(problem_set: &ProblemSet) -> Result<(), std::io::Error> {
             })
             .collect::<Result<Vec<_>, _>>()?;
 
-        let report = Report {
-            number: line_number,
-            levels: nums,
-        };
+        let report = Report::new(line_number, nums);
+
+        println!("READ {}", report);
 
         reports.push(report);
     }
