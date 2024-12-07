@@ -17,7 +17,20 @@ struct Report {
 
 impl Report {
     pub fn new(number: usize, levels: Vec<i32>) -> Self {
-        let state: State = State::Safe;
+        let mut state: State = State::Safe;
+
+        if levels[0] == levels[1] {
+            state = State::Unsafe;
+        }
+
+        let multiplier = if levels[0] >= levels[1] { -1 } else { 1 };
+
+        for i in 1..levels.len() {
+            let delta = multiplier * (levels[i] - levels[i - 1]);
+            if delta < 1 || delta > 3 {
+                state = State::Unsafe;
+            }
+        }
 
         Report {
             number: number,
@@ -40,8 +53,8 @@ impl fmt::Display for Report {
 #[derive(Debug)]
 struct ProblemSet {
     file_name: &'static str,
-    expected_answer_p1: i32,
-    expected_answer_p2: i32,
+    expected_answer_p1: usize,
+    expected_answer_p2: usize,
 }
 
 fn try_set(problem_set: &ProblemSet) -> Result<(), std::io::Error> {
@@ -67,13 +80,15 @@ fn try_set(problem_set: &ProblemSet) -> Result<(), std::io::Error> {
 
         let report = Report::new(line_number, nums);
 
-        println!("READ {}", report);
-
         reports.push(report);
     }
 
-    let accum_p1 = -1;
-    let accum_p2 = -1;
+    let accum_p1 = reports
+        .iter()
+        .filter(|report| matches!(report.state, State::Safe))
+        .count();
+
+    let accum_p2 = 0;
 
     if problem_set.expected_answer_p1 != accum_p1 {
         return Err(io::Error::new(
@@ -102,13 +117,13 @@ fn main() -> io::Result<()> {
     let problem_sets: [ProblemSet; 2] = [
         ProblemSet {
             file_name: "../data/02s.txt",
-            expected_answer_p1: 11,
-            expected_answer_p2: 31,
+            expected_answer_p1: 2,
+            expected_answer_p2: 0,
         },
         ProblemSet {
             file_name: "../data/02.txt",
-            expected_answer_p1: 3569916,
-            expected_answer_p2: 26407426,
+            expected_answer_p1: 299,
+            expected_answer_p2: 0,
         },
     ];
 
