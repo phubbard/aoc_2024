@@ -128,8 +128,7 @@ A24M_PARAM_DIR =
 #  AOC 2024 stuff
 #
 
-
-A24M_RUST_IMAGE = ghcr.io/bhyslop/recipemuster:bottle_rust.20241201__213634
+A24M_RUST_IMAGE = ghcr.io/bhyslop/recipemuster:bottle_rust.20241207__191241
 
 
 a24br%:
@@ -143,6 +142,11 @@ a24br%:
 	@echo 'Run initial rust app...'
 	podman run -v ./:/app:Z -w /app/rust $(A24M_RUST_IMAGE) ./$(A24_PARAMETER_2)
 	@echo 'done.'
+
+a24fr%:
+	@echo "Formatting Rust code with rustfmt..."
+	podman run -v ./:/app:Z -w /app/rust $(A24M_RUST_IMAGE) rustfmt --edition 2021 $(A24_PARAMETER_2).rs
+	@echo "Rust code formatting complete."
 
 
 
