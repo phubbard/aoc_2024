@@ -9,6 +9,7 @@ def is_safe(report):
 
 
 def generate_all_reports(report):
+    # Generate all reports with one level removed
     for i in range(len(report)):
         yield report[:i] + report[i+1:]
 
@@ -17,16 +18,14 @@ def is_safe_with_damper(report):
     # Check if levels are either all increasing or all decreasing. In part 2, we
     # can now have one bad step before it's unsafe. For each report, we need to try the list as-is,
     # and try removing each level one at a time.
-
     if is_safe(report):
         return True
 
     for report in generate_all_reports(report):
         if is_safe(report):
             return True
-        
+ 
     return False
-
 
 
 def count_safe_reports(data, part_one=True):
